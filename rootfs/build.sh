@@ -1,5 +1,6 @@
 #/bin/bash
 
+
 DIST=bookworm
 BOOT_URL="https://github.com/KyonLi/ufi003-kernel/releases/download/6.10.2-1/boot.img"
 BOOT_NO_MODEM_URL="https://github.com/KyonLi/ufi003-kernel/releases/download/6.10.2-1/boot-no-modem.img"

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 LANG_TARGET=en_US.UTF-8
-PASSWORD=1234
-NAME=ufi003
+PASSWORD=5115
+NAME=UFI001C
 PARTUUID=a7ab80e8-e9d1-e8cd-f157-93f69b1d141e
 
 cat <<EOF > /etc/apt/sources.list

@@ -37,6 +37,7 @@ cat <<EOF >/etc/rc.local
 # bits.
 #
 # By default this script does nothing.
+nmcli c u USB
 
 exit 0
 EOF

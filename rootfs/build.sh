@@ -36,11 +36,12 @@ umount debian/dev
 umount debian/sys
 cp debian/etc/debian_version ./
 mv debian/tmp/info.md ./
-echo -e "\n🔗 [linux-headers & linux-libc-dev]($K_DEV_URL)" >> info.md
+echo >> info.md
+echo "🔗 [linux-headers & linux-libc-dev]($K_DEV_URL)" >> info.md
 rm -rf debian/tmp/* debian/root/.bash_history > /dev/null 2>&1
 
-echo -e "\n\nNow you can make additional modifications to rootfs.\nPress ENTER to continue"
-head -n 1 >/dev/null
+#echo -e "\n\nNow you can make additional modifications to rootfs.\nPress ENTER to continue"
+#head -n 1 >/dev/null
 
 #dd if=/dev/zero of=debian-ufi003.img bs=1M count=$(( $(df -m --output=used debian | tail -1 | awk '{print $1}') + 100 ))
 dd if=/dev/zero of=debian-ufi003.img bs=1M count=$(( $(du -ms debian | cut -f1) + 100 ))

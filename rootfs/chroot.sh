@@ -62,9 +62,7 @@ sed -i 's/^.\?PERCENT=.*$/PERCENT=300/g' /etc/default/zramswap
 sed -i s/'openstick-failsafe'/UFI001C/g /usr/sbin/openstick-button-monitor.sh
 sed -i s/'openstick-failsafe'/UFI001C/g /usr/sbin/openstick-gc-manager.sh
 sed -i s/'openstick-failsafe'/UFI001C/g /usr/sbin/openstick-startup-diagnose.sh
-sed -i s/'get_usb_role'/USB/g /usr/sbin/openstick-gc-manager.sh
-sed -i s/'get_usb_role'/USB/g /usr/sbin/openstick-startup-diagnose.sh
-
+sed -i s/'usb-failsafe'/USB/g /usr/sbin/openstick-startup-diagnose.sh
 
 vmlinuz_name=$(basename /boot/vmlinuz-*)
 cat <<EOF > /tmp/info.md

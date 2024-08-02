@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LANG_TARGET=en_US.UTF-8
+LANG_TARGET=zh_CN.UTF-8
 PASSWORD=5115
 NAME=UFI001C
 PARTUUID=a7ab80e8-e9d1-e8cd-f157-93f69b1d141e
@@ -24,6 +24,25 @@ PARTUUID=$PARTUUID / ext4 defaults,noatime,commit=600,errors=remount-ro 0 1
 tmpfs /tmp tmpfs defaults,nosuid 0 0
 EOF
 
+cat <<EOF >/etc/rc.local
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+exit 0
+EOF
+chmod +x /etc/rc.local
+systemctl enable --now rc-local
+
 apt-get update
 apt-get full-upgrade -y
 apt-get install -y locales network-manager openssh-server chrony fake-hwclock zram-tools rmtfs qrtr-tools
@@ -39,6 +58,13 @@ sed -i "s/::1\t\tlocalhost/::1\t\tlocalhost $NAME/g" /etc/hosts
 sed -i 's/^.\?PermitRootLogin.*$/PermitRootLogin yes/g' /etc/ssh/sshd_config
 sed -i 's/^.\?ALGO=.*$/ALGO=lzo-rle/g' /etc/default/zramswap
 sed -i 's/^.\?PERCENT=.*$/PERCENT=300/g' /etc/default/zramswap
+
+sed -i s/'openstick-failsafe'/UFI001C/g /usr/sbin/openstick-button-monitor.sh
+sed -i s/'openstick-failsafe'/UFI001C/g /usr/sbin/openstick-gc-manager.sh
+sed -i s/'openstick-failsafe'/UFI001C/g /usr/sbin/openstick-startup-diagnose.sh
+sed -i s/'get_usb_role'/USB/g /usr/sbin/openstick-gc-manager.sh
+sed -i s/'get_usb_role'/USB/g /usr/sbin/openstick-startup-diagnose.sh
+
 
 vmlinuz_name=$(basename /boot/vmlinuz-*)
 cat <<EOF > /tmp/info.md

@@ -46,8 +46,11 @@ systemctl enable --now rc-local
 
 apt-get update
 apt-get full-upgrade -y
-apt-get install -y locales network-manager openssh-server chrony fake-hwclock zram-tools rmtfs qrtr-tools
+apt-get install -y locales network-manager openssh-server chrony fake-hwclock zram-tools rmtfs qrtr-tools sudo
 apt-get install -y /tmp/*.deb
+apt-get update
+sudo apt-get upgrade -y
+
 sed -i -e "s/# $LANG_TARGET UTF-8/$LANG_TARGET UTF-8/" /etc/locale.gen
 dpkg-reconfigure --frontend=noninteractive locales
 update-locale LANG=$LANG_TARGET LC_ALL=$LANG_TARGET LANGUAGE=$LANG_TARGET

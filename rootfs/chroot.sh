@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 LANG_TARGET=zh_CN.UTF-8
 PASSWORD=5115
 NAME=UFI001C

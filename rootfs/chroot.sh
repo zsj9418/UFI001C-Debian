@@ -4,6 +4,7 @@ LANG_TARGET=zh_CN.UTF-8
 PASSWORD=5115
 NAME=UFI001C
 WIFI=UFI001C
+WIFIPASS=00000000
 PARTUUID=a7ab80e8-e9d1-e8cd-f157-93f69b1d141e
 
 cat <<EOF > /etc/apt/sources.list
@@ -67,6 +68,11 @@ sed -i 's/^.\?PERCENT=.*$/PERCENT=300/g' /etc/default/zramswap
 sed -i s/'openstick-failsafe'/$WIFI/g /usr/sbin/openstick-button-monitor.sh
 sed -i s/'openstick-failsafe'/$WIFI/g /usr/sbin/openstick-gc-manager.sh
 sed -i s/'openstick-failsafe'/$WIFI/g /usr/sbin/openstick-startup-diagnose.sh
+
+sed -i s/'12345678'/$WIFIPASS/g /usr/sbin/openstick-button-monitor.sh
+sed -i s/'12345678'/$WIFIPASS/g /usr/sbin/openstick-gc-manager.sh
+sed -i s/'12345678'/$WIFIPASS/g /usr/sbin/openstick-startup-diagnose.sh
+
 sed -i s/'usb-failsafe'/USB/g /usr/sbin/openstick-startup-diagnose.sh
 
 vmlinuz_name=$(basename /boot/vmlinuz-*)
@@ -75,7 +81,7 @@ cat <<EOF > /tmp/info.md
 - 默认用户名: root
 - 默认密码: $PASSWORD
 - WiFi名称: $WIFI
-- WiFi密码: 12345678
+- WiFi密码: $WIFIPASS
 EOF
 rm -rf /etc/ssh/ssh_host_* /var/lib/apt/lists
 apt clean

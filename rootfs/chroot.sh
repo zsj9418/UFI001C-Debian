@@ -3,6 +3,7 @@
 LANG_TARGET=zh_CN.UTF-8
 PASSWORD=5115
 NAME=UFI001C
+WIFI=UFI001C
 PARTUUID=a7ab80e8-e9d1-e8cd-f157-93f69b1d141e
 
 cat <<EOF > /etc/apt/sources.list
@@ -63,9 +64,9 @@ sed -i 's/^.\?PermitRootLogin.*$/PermitRootLogin yes/g' /etc/ssh/sshd_config
 sed -i 's/^.\?ALGO=.*$/ALGO=lzo-rle/g' /etc/default/zramswap
 sed -i 's/^.\?PERCENT=.*$/PERCENT=300/g' /etc/default/zramswap
 
-sed -i s/'openstick-failsafe'/UFI001C/g /usr/sbin/openstick-button-monitor.sh
-sed -i s/'openstick-failsafe'/UFI001C/g /usr/sbin/openstick-gc-manager.sh
-sed -i s/'openstick-failsafe'/UFI001C/g /usr/sbin/openstick-startup-diagnose.sh
+sed -i s/'openstick-failsafe'/$WIFI/g /usr/sbin/openstick-button-monitor.sh
+sed -i s/'openstick-failsafe'/$WIFI/g /usr/sbin/openstick-gc-manager.sh
+sed -i s/'openstick-failsafe'/$WIFI/g /usr/sbin/openstick-startup-diagnose.sh
 sed -i s/'usb-failsafe'/USB/g /usr/sbin/openstick-startup-diagnose.sh
 
 vmlinuz_name=$(basename /boot/vmlinuz-*)
@@ -73,7 +74,7 @@ cat <<EOF > /tmp/info.md
 - 内核版本: ${vmlinuz_name#*-}
 - 默认用户名: root
 - 默认密码: $PASSWORD
-- WiFi名称: openstick-failsafe
+- WiFi名称: $WIFI
 - WiFi密码: 12345678
 EOF
 rm -rf /etc/ssh/ssh_host_* /var/lib/apt/lists

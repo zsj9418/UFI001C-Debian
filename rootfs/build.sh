@@ -2,10 +2,10 @@
 
 
 DIST=trixie
-BOOT_URL="https://github.com/KyonLi/ufi003-kernel/releases/download/6.6.43-1/boot.img"
-BOOT_NO_MODEM_URL="https://github.com/KyonLi/ufi003-kernel/releases/download/6.6.43-1/boot-no-modem.img"
-BOOT_NO_MODEM_OC_URL="https://github.com/KyonLi/ufi003-kernel/releases/download/6.6.43-1/boot-no-modem-oc.img"
-K_IMAGE_DEB_URL="https://github.com/YANXIAOXIH/ufi003-kernel/releases/download/6.6.43-1/linux-image-6.6.43-msm8916-ga34108685526_6.6.43-ga34108685526-1_arm64.deb"
+BOOT_URL="https://github.com/YANXIAOXIH/UFI001C-kernel/actions/runs/10438761109/artifacts/1824204817"
+BOOT_NO_MODEM_URL="1https://github.com/KyonLi/ufi003-kernel/releases/download/6.6.43-1/boot-no-modem.img"
+BOOT_NO_MODEM_OC_URL="1https://github.com/KyonLi/ufi003-kernel/releases/download/6.6.43-1/boot-no-modem-oc.img"
+K_IMAGE_DEB_URL="1https://github.com/YANXIAOXIH/ufi003-kernel/releases/download/6.6.43-1/linux-image-6.6.43-msm8916-ga34108685526_6.6.43-ga34108685526-1_arm64.deb"
 K_DEV_URL="https://github.com/KyonLi/ufi003-kernel/releases/tag/6.6.43-1"
 UUID=62ae670d-01b7-4c7d-8e72-60bcd00410b7
 
@@ -19,7 +19,7 @@ wget -P ../kernel "$BOOT_URL"
 wget -P ../kernel "$BOOT_NO_MODEM_URL"
 wget -P ../kernel "$BOOT_NO_MODEM_OC_URL"
 wget -P ../kernel "$K_IMAGE_DEB_URL"
-
+unzip ../kernel and boot images.zip
 mkdir debian build
 debootstrap --arch=arm64 --foreign $DIST debian https://deb.debian.org/debian/
 LANG=C LANGUAGE=C LC_ALL=C chroot debian /debootstrap/debootstrap --second-stage

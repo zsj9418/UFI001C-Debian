@@ -19,7 +19,9 @@ wget -P ../kernel "$BOOT_URL"
 wget -P ../kernel "$BOOT_NO_MODEM_URL"
 wget -P ../kernel "$BOOT_NO_MODEM_OC_URL"
 wget -P ../kernel "$K_IMAGE_DEB_URL"
-unzip ../kernel and boot images.zip
+
+unzip ../"kernel and boot images.zip"
+
 mkdir debian build
 debootstrap --arch=arm64 --foreign $DIST debian https://deb.debian.org/debian/
 LANG=C LANGUAGE=C LC_ALL=C chroot debian /debootstrap/debootstrap --second-stage

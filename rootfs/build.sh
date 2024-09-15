@@ -1,7 +1,7 @@
 #/bin/bash
 
 
-DIST=trixie
+DIST=bookworm
 BOOT_URL="https://github.com/YANXIAOXIH/UFI001C-kernel/releases/download/6.6.43-1/boot.img"
 BOOT_NO_MODEM_URL="https://github.com/YANXIAOXIH/UFI001C-kernel/releases/download/6.6.43-1/boot-no-modem.img"
 BOOT_NO_MODEM_OC_URL="https://github.com/YANXIAOXIH/UFI001C-kernel/releases/download/6.6.43-1/boot-no-modem-oc.img"

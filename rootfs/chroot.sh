@@ -55,7 +55,7 @@ systemctl enable --now rc-local
 
 apt-get update
 apt-get full-upgrade -y
-apt-get install -y locales network-manager modemmanager openssh-server chrony fake-hwclock zram-tools rmtfs qrtr-tools sudo nano git vim wget curl tar zip fdisk cron dos2unix
+apt-get install -y locales network-manager modemmanager openssh-server chrony fake-hwclock zram-tools rmtfs qrtr-tools sudo nano git vim wget curl tar zip fdisk cron dos2unix iptables
 apt-get install -y /tmp/*.deb
 apt-get update
 sudo apt-get upgrade -y

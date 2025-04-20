@@ -3,9 +3,9 @@
 
 LANG_TARGET=zh_CN.UTF-8
 PASSWORD=1234
-NAME=UFI001C
+NAME=4G-UFI
 WIFI=UFI001C
-WIFIPASS=00000000
+WIFIPASS=12345678
 PARTUUID=a7ab80e8-e9d1-e8cd-f157-93f69b1d141e
 
 cat <<EOF > /etc/apt/sources.list
@@ -41,6 +41,12 @@ cat <<EOF >/etc/rc.local
 #
 # By default this script does nothing.
 nmcli c u USB
+sleep 3
+grep 0 /sys/kernel/debug/usb/ci_hdrc.0/device | grep speed
+if [ $? -eq 0 ]
+then
+echo host > /sys/kernel/debug/usb/ci_hdrc.0/role
+fi
 
 exit 0
 EOF
@@ -49,7 +55,7 @@ systemctl enable --now rc-local
 
 apt-get update
 apt-get full-upgrade -y
-apt-get install -y locales network-manager modemmanager openssh-server chrony fake-hwclock zram-tools rmtfs qrtr-tools sudo
+apt-get install -y locales network-manager modemmanager openssh-server chrony fake-hwclock zram-tools rmtfs qrtr-tools sudo nano git vim wget curl tar zip fdisk cron dos2unix
 apt-get install -y /tmp/*.deb
 apt-get update
 sudo apt-get upgrade -y

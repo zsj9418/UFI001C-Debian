@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 LANG_TARGET=zh_CN.UTF-8
 PASSWORD=1234
 NAME=4G-UFI
@@ -53,16 +52,35 @@ EOF
 chmod +x /etc/rc.local
 systemctl enable --now rc-local
 
+# 更新包列表，升级
 apt-get update
 apt-get full-upgrade -y
+
+# 安装必要软件包，包括 iptables
 apt-get install -y locales network-manager modemmanager openssh-server chrony fake-hwclock zram-tools rmtfs qrtr-tools sudo nano git vim wget curl tar zip fdisk cron dos2unix iptables
+
+# 这里添加切换 iptables 后端为 legacy
+# 确保 iptables 已安装
+apt-get install -y iptables
+
+# 设置 iptables 为 legacy 模式
+update-alternatives --set iptables /usr/sbin/iptables-legacy
+update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
+
+# 可选：确认切换成功
+iptables --version
+
+# 继续安装本地包
 apt-get install -y /tmp/*.deb
 apt-get update
-sudo apt-get upgrade -y
+apt-get upgrade -y
 
+# 设置 locale
 sed -i -e "s/# $LANG_TARGET UTF-8/$LANG_TARGET UTF-8/" /etc/locale.gen
 dpkg-reconfigure --frontend=noninteractive locales
 update-locale LANG=$LANG_TARGET LC_ALL=$LANG_TARGET LANGUAGE=$LANG_TARGET
+
+# 清理网络配置
 echo -n >/etc/resolv.conf
 echo -e "$PASSWORD\n$PASSWORD" | passwd
 echo $NAME > /etc/hostname
@@ -72,6 +90,7 @@ sed -i 's/^.\?PermitRootLogin.*$/PermitRootLogin yes/g' /etc/ssh/sshd_config
 sed -i 's/^.\?ALGO=.*$/ALGO=lzo-rle/g' /etc/default/zramswap
 sed -i 's/^.\?PERCENT=.*$/PERCENT=300/g' /etc/default/zramswap
 
+# 配置其他脚本
 sed -i s/'openstick-failsafe'/$WIFI/g /usr/sbin/openstick-button-monitor.sh
 sed -i s/'openstick-failsafe'/$WIFI/g /usr/sbin/openstick-gc-manager.sh
 sed -i s/'openstick-failsafe'/$WIFI/g /usr/sbin/openstick-startup-diagnose.sh
@@ -90,6 +109,7 @@ cat <<EOF > /tmp/info.md
 - WiFi名称: $WIFI
 - WiFi密码: $WIFIPASS
 EOF
+
 rm -rf /etc/ssh/ssh_host_* /var/lib/apt/lists
 apt clean
 exit

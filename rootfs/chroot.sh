@@ -26,7 +26,8 @@ PARTUUID=$PARTUUID / ext4 defaults,noatime,commit=600,errors=remount-ro 0 1
 tmpfs /tmp tmpfs defaults,nosuid 0 0
 EOF
 
-cat <<EOF >/etc/rc.local
+# 配置rc.local
+cat <<EOF > /etc/rc.local
 #!/bin/sh -e
 #
 # rc.local
@@ -35,14 +36,15 @@ cat <<EOF >/etc/rc.local
 # Make sure that the script will "exit 0" on success or any other
 # value on error.
 #
-# In order to enable or disable this script just change the execution
-# bits.
-#
-# By default this script does nothing.
+# 加载TUN内核模块，确保TUN支持开启
+modprobe tun
+# 设置TUN设备权限
+chmod 600 /dev/net/tun
+
 nmcli c u USB
 sleep 3
 grep 0 /sys/kernel/debug/usb/ci_hdrc.0/device | grep speed
-if [ $? -eq 0 ]
+if [ \$? -eq 0 ]
 then
 echo host > /sys/kernel/debug/usb/ci_hdrc.0/role
 fi
@@ -51,6 +53,9 @@ exit 0
 EOF
 chmod +x /etc/rc.local
 systemctl enable --now rc-local
+
+# 将'tun'加入开机自动加载列表
+echo "tun" >> /etc/modules
 
 # 更新包列表，升级
 apt-get update

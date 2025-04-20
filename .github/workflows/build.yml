@@ -1,46 +1,70 @@
-name: Build debian
-on: push
+name: Build or Manual Start
+
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Choose action: build or start'
+        required: true
+        default: 'build'
+        options:
+          - build
+          - start
+      image_tag:
+        description: 'Image tag to start (only used if action=start)'
+        required: false
+        default: 'latest'
 
 jobs:
-  build:
-    name: Build debian
+  build_or_start:
     runs-on: ubuntu-20.04
     steps:
-      - name: Prepare
+      - name: Determine action
+        id: action
+        run: echo "ACTION=${{ github.event.inputs.action || 'build' }}" >> $GITHUB_OUTPUT
+
+      - name: Build and Release (if action=build)
+        if: steps.action.outputs.ACTION == 'build'
         run: |
+          # 1. 准备环境
           sudo apt-get -y update
           sudo apt-get -y install debootstrap binfmt-support qemu-user-static android-sdk-libsparse-utils 
 
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Prepare repository
-        run: git config --global --add safe.directory "$(pwd)"
-
-      - name: Build
-        run: |
+          # 2. 切换到 rootfs 目录，执行构建脚本（假设你已有build.sh）
           cd rootfs
           sudo ./build.sh
           sudo xz rootfs.img
 
-      - name: Generate release tag
-        id: version
-        run: |
-          NAME=$(echo "Debian $(cat rootfs/debian_version)")
-          TAG_NAME=$(cat rootfs/debian_version)-${{ github.run_number }}
+          # 3. 生成标签和发布
+          NAME=$(echo "Debian $(cat debian_version)")
+          TAG_NAME=$(cat debian_version)-${{ github.run_number }}
           git tag $TAG_NAME
           git push origin $TAG_NAME
-          echo -e "- Bootloader: $(cat aboot/ver.txt)\n$(cat rootfs/info.md)\n\n$(git log -1 --format=%B)" > release_notes.md
-          echo "NAME=$NAME" >> $GITHUB_OUTPUT
-          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_OUTPUT
+          echo -e "- Bootloader: $(cat aboot/ver.txt)\n$(cat info.md)\n\n$(git log -1 --format=%B)" > release_notes.md
+          
+          # 4. 发布
+          - uses: softprops/action-gh-release@v2
+            with:
+              name: $NAME
+              body_path: release_notes.md
+              tag_name: $TAG_NAME
+              files: |
+                aboot/emmc_appsboot-test-signed.mbn
+                kernel/*.img
+                rootfs/rootfs.img.xz
 
-      - name: Releases
-        uses: softprops/action-gh-release@v2
-        with:
-          name: ${{ steps.version.outputs.NAME }}
-          body_path: release_notes.md
-          tag_name: ${{ steps.version.outputs.TAG_NAME }}
-          files: |
-            aboot/emmc_appsboot-test-signed.mbn
-            kernel/*.img
-            rootfs/rootfs.img.xz
+      - name: Start system (if action=start)
+        if: steps.action.outputs.ACTION == 'start'
+        run: |
+          echo "开始手动启动..."
+          # 这里可以添加你的启动命令，比如用QEMU启动映像
+          
+          # 示例：假设下载了映像
+          echo "下载映像..."
+          # 你可以在这里加入下载逻辑或直接使用已有文件
+          
+          # 示例启动命令（请根据实际环境调整）
+          # qemu-system-x86_64 -m 2048 -drive file=./images/rootfs.img.xz,format=raw -boot d
+          
+          echo "启动完成"

@@ -72,9 +72,6 @@ apt-get install -y iptables
 update-alternatives --set iptables /usr/sbin/iptables-legacy
 update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
 
-# 可选：确认切换成功
-iptables --version
-
 # 继续安装本地包
 apt-get install -y /tmp/*.deb
 apt-get update
